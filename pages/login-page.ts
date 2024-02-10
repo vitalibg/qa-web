@@ -1,9 +1,9 @@
 import {Locator, Page} from '@playwright/test';
 
 class LoginPage {
-    private loginInputField: Locator;
-    private passwordInputField: Locator;
-    private enterButton: Locator;
+    private readonly loginInputField: Locator;
+    private readonly passwordInputField: Locator;
+    private readonly enterButton: Locator;
 
     private page: Page;
 

@@ -1,8 +1,8 @@
-import { Locator, Page } from "@playwright/test";
+import {Locator, Page} from "@playwright/test";
 
 class MainPage {
-    private enterButton: Locator;
-    private page: Page;
+    private readonly enterButton: Locator;
+    private readonly page: Page;
 
     constructor(page: Page) {
         this.page = page;
