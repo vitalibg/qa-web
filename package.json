@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test cart.spec.ts \"Переход\\s+в\\s+пустую\\s+корзину$\"",
+    "test:prod": "cross-env test_env=prod npx playwright test cart.spec.ts",
     "generate-report": "npx allure generate allure-results --clean && npx allure open"
   },
   "keywords": [],
@@ -17,7 +17,11 @@
     "@typescript-eslint/parser": "^6.21.0",
     "allure-commandline": "^2.27.0",
     "allure-playwright": "^2.12.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.56.0",
     "eslint-plugin-playwright": "^0.22.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.2"
   }
 }
