@@ -1,6 +1,6 @@
 import {Locator} from "@playwright/test";
 import {Page} from "playwright-core";
-import CartPage from "./cart-page";
+import CartDropDownMenu from "./cart-drop-down-menu";
 
 class HomePage {
     private readonly userName: Locator;
@@ -14,26 +14,42 @@ class HomePage {
         this.userName = page.locator(".text-uppercase");
         this.bookCount = page.locator(".basket-count-items.badge");
         this.cartLink = page.locator("#dropdownBasket");
-        this.bookWithDiscount = page.locator(".hasDiscount .actionBuyProduct")
+        this.bookWithDiscount = page.locator(".hasDiscount .actionBuyProduct");
     }
 
     async getUserName() {
-        return await this.userName.textContent()
+        return await this.userName.textContent();
     }
 
     async getBookCount() {
-        return await this.bookCount.textContent()
+        return await this.bookCount.textContent();
     }
 
     async clearCart() {
-        await this.cartLink.click()
-        await new CartPage(this.page).clearCart()
+        await this.cartLink.click();
+        await new CartDropDownMenu(this.page).clearCart();
     }
 
-    async addBookWithDiscount() {
+    async openCart() {
+        await this.cartLink.click();
+        await new CartDropDownMenu(this.page).goToCart();
+    }
+
+    async clickCartMenuItem() {
+        await this.cartLink.click();
+    }
+
+    async addFirstBookWithDiscount() {
         await this.bookWithDiscount.first().click();
     }
 
+    async getFirstBookTitle() {
+        return (await this.page.locator(".hasDiscount .product_name").first().textContent()).trim()
+    }
+
+    async getFirstBookPrice() {
+        return (await this.page.locator(".hasDiscount .product_price").first().textContent()).trim()
+    }
 }
 
 export default HomePage

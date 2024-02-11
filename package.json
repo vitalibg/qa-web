@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:prod": "cross-env test_env=prod npx playwright test cart.spec.ts",
+    "test:prod": "cross-env test_env=prod npx playwright test cart.spec.ts -g \"Переход\\s+в\\s+корзину\\s+с\\s+1\\s+акционным\\s+товаром$\"",
     "generate-report": "npx allure generate allure-results --clean && npx allure open"
   },
   "keywords": [],
