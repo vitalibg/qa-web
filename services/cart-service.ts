@@ -9,8 +9,7 @@ export abstract class CartService {
         }
     }
 
-    public static async addBookWithDiscount(page: Page) {
-        const homePage = new HomePage(page);
-        await homePage.addFirstBookWithDiscount()
+    public static async addBookWithoutDiscount(page: Page) {
+        await new HomePage(page).addFirstBookWithDiscount()
     }
 }

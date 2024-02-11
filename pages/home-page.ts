@@ -7,6 +7,7 @@ class HomePage {
     private readonly bookCount: Locator;
     private readonly cartLink: Locator;
     private readonly bookWithDiscount: Locator;
+    private readonly bookWithoutDiscount: Locator;
     private readonly page: Page;
 
     constructor(page: Page) {
@@ -15,6 +16,7 @@ class HomePage {
         this.bookCount = page.locator(".basket-count-items.badge");
         this.cartLink = page.locator("#dropdownBasket");
         this.bookWithDiscount = page.locator(".hasDiscount .actionBuyProduct");
+        this.bookWithoutDiscount = page.locator(".note-item:not(.hasDiscount)");
     }
 
     async getUserName() {
@@ -41,6 +43,10 @@ class HomePage {
 
     async addFirstBookWithDiscount() {
         await this.bookWithDiscount.first().click();
+    }
+
+    async addFirstBookWithoutDiscount() {
+        await this.bookWithoutDiscount.first().click();
     }
 
     async getFirstBookTitle() {
