@@ -5,11 +5,7 @@ export abstract class CartService {
     public static async clearCart(page: Page) {
         const homePage = new HomePage(page);
         if (await homePage.getBookCount() !== "0") {
-            await homePage.clearCart();
+            await homePage.clearCart(page);
         }
-    }
-
-    public static async addBookWithoutDiscount(page: Page) {
-        await new HomePage(page).addFirstBookWithDiscount()
     }
 }

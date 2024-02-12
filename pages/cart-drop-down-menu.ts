@@ -4,33 +4,34 @@ class CartDropDownMenu {
     private readonly clearCartButton: Locator;
     private readonly goToCartButton: Locator;
     private readonly basketPriceText: Locator;
+    private readonly dropdownBasket: Locator;
     private readonly page: Page;
 
     constructor(page: Page) {
         this.page = page;
-        this.clearCartButton = page.locator(".btn-danger");
+        // this.clearCartButton = page.locator(".actionClearBasket > a");
+        this.clearCartButton = page.getByRole("button", {name: "Очистить корзину"});
         this.goToCartButton = page.locator("//a[@href='/basket']");
         this.basketPriceText = page.locator(".basket_price");
+        this.dropdownBasket = page.locator("[aria-labelledby='dropdownBasket'] ");
     }
 
     async clearCart() {
+        await this.clearCartButton.waitFor({state: "visible"})
         await this.clearCartButton.click();
     }
 
-    async goToCart() {
+    async openCart() {
+        await this.goToCartButton.waitFor({state: "visible"})
         await this.goToCartButton.click()
     }
 
-    async getBookTitle() {
-        return (await this.page.locator("[aria-labelledby='dropdownBasket'] .basket-item-title").textContent()).trim()
-    }
-
-    async getBookPrice() {
-        return (await this.page.locator("[aria-labelledby='dropdownBasket'] .basket-item-price").textContent()).trim()
+    async getBookBy(bookProperty: string) {
+        return (await this.page.locator(`${this.dropdownBasket} .basket-item-${bookProperty}`).textContent()).trim();
     }
 
     async getBasketPrice() {
-        return (await this.page.locator("[aria-labelledby='dropdownBasket'] .basket_price").textContent()).trim()
+        return (await this.page.locator(`${this.dropdownBasket} ${this.basketPriceText}`).textContent()).trim();
     }
 }
 

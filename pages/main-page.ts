@@ -14,6 +14,7 @@ class MainPage {
     }
 
     async clickEnterMenuItem() {
+        await this.enterButton.waitFor({state: "visible"})
         await this.enterButton.click();
     }
 }
