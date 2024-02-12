@@ -15,13 +15,15 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Install cross-env globally[TEST]
+      - name: Install cross-env
         run: npm install --global cross-env
       - name: Run Playwright tests
         run: cross-env test_env=prod npx playwright test cart.spec.ts
+      - name: Generate allure report
+        run: npx allure generate allure-results --clean && npx allure open
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: playwright-report
-          path: playwright-report/
+          name: allure-report
+          path: allure-report/
           retention-days: 30
