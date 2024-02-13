@@ -1,12 +1,12 @@
 import {Locator, Page} from "@playwright/test";
 
 class MainPage {
-    private readonly enterButton: Locator;
     private readonly page: Page;
+    private readonly enterLink: Locator;
 
     constructor(page: Page) {
         this.page = page;
-        this.enterButton = page.getByText("Вход");
+        this.enterLink = page.getByText("Вход");
     }
 
     async navigate() {
@@ -14,8 +14,8 @@ class MainPage {
     }
 
     async clickEnterMenuItem() {
-        await this.enterButton.waitFor({state: "visible"})
-        await this.enterButton.click();
+        await this.enterLink.waitFor({state: "visible"})
+        await this.enterLink.click();
     }
 }
 
