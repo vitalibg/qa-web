@@ -1,11 +1,10 @@
-import {expect, Locator, Page} from "@playwright/test";
+import {Locator, Page} from "@playwright/test";
 
 class LoginPage {
+    private readonly page: Page;
     private readonly loginInputField: Locator;
     private readonly passwordInputField: Locator;
     private readonly enterButton: Locator;
-
-    private page: Page;
 
     constructor(page: Page) {
         this.page = page;
@@ -15,10 +14,14 @@ class LoginPage {
     }
 
     async loginAs(login: string, password: string) {
-        await this.loginInputField.type(login);
+        await this.loginInputField.clear();
+        await this.loginInputField.type(login)
+        await this.passwordInputField.clear()
         await this.passwordInputField.type(password);
-        await expect(this.enterButton).not.toHaveAttribute('disabled');
-        await this.enterButton.click()
+        await this.enterButton.elementHandle({timeout: 5000}).then(button => {
+            button.waitForElementState("enabled")
+        })
+        await this.enterButton.click();
     }
 }
 
