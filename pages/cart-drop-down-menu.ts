@@ -1,37 +1,42 @@
 import {Locator, Page} from "@playwright/test";
+import BasePage from "./base-page";
 
-class CartDropDownMenu {
-    private readonly clearCartButton: Locator;
-    private readonly goToCartButton: Locator;
-    private readonly basketPriceText: Locator;
-    private readonly dropdownBasket: Locator;
+class CartDropDownMenu extends BasePage {
     private readonly page: Page;
+    private readonly clearCartButton: Locator;
+    private readonly openCartButton: Locator;
+    private readonly bookTitle: Locator;
+    private readonly bookPrice: Locator;
+    private readonly totalPrice: Locator;
 
     constructor(page: Page) {
+        super();
         this.page = page;
-        // this.clearCartButton = page.locator(".actionClearBasket > a");
-        this.clearCartButton = page.getByRole("button", {name: "Очистить корзину"});
-        this.goToCartButton = page.locator("//a[@href='/basket']");
-        this.basketPriceText = page.locator(".basket_price");
-        this.dropdownBasket = page.locator("[aria-labelledby='dropdownBasket'] ");
+        this.clearCartButton = page.locator(".btn-danger");
+        this.openCartButton = page.locator("//a[@href='/basket']");
+        this.bookTitle = page.locator("[aria-labelledby='dropdownBasket'] .basket-item-title");
+        this.bookPrice = page.locator("[aria-labelledby='dropdownBasket'] .basket-item-price");
+        this.totalPrice = page.locator("[aria-labelledby='dropdownBasket'] .basket_price");
     }
 
-    async clearCart() {
-        await this.clearCartButton.waitFor({state: "visible"})
-        await this.clearCartButton.click();
+    async clearCart(): Promise<void> {
+        await this.clickElement(this.clearCartButton);
     }
 
-    async openCart() {
-        await this.goToCartButton.waitFor({state: "visible"})
-        await this.goToCartButton.click()
+    async openCart(): Promise<void> {
+        await this.clickElement(this.openCartButton);
     }
 
-    async getBookBy(bookProperty: string) {
-        return (await this.page.locator(`${this.dropdownBasket} .basket-item-${bookProperty}`).textContent()).trim();
+    async getBookTitle(): Promise<string> {
+        return await this.getText(this.bookTitle);
     }
 
-    async getBasketPrice() {
-        return (await this.page.locator(`${this.dropdownBasket} ${this.basketPriceText}`).textContent()).trim();
+    async getBookPrice(): Promise<string> {
+        return await this.getText(this.bookPrice);
+    }
+
+    async getTotalPrice(): Promise<string> {
+        return await this.getText(this.totalPrice);
     }
 }
 

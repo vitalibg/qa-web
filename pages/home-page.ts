@@ -1,56 +1,82 @@
-import {Locator} from "@playwright/test";
 import {Page} from "playwright-core";
 import CartDropDownMenu from "./cart-drop-down-menu";
+import {Locator} from "@playwright/test";
+import BasePage from "./base-page";
 
-class HomePage {
+class HomePage extends BasePage {
+    private readonly page: Page;
     private readonly bookCount: Locator;
     private readonly cartLink: Locator;
     private readonly bookWithDiscount: Locator;
     private readonly bookWithoutDiscount: Locator;
-    private readonly bookTitle: Locator;
+    private readonly bookTitleWithoutDiscount: Locator;
+    private readonly bookPriceWithoutDiscount: Locator;
+    private readonly bookTitleWithDiscount: Locator;
+    private readonly bookPriceWithDiscount: Locator;
     private readonly bookPrice: Locator;
-    private readonly page: Page;
 
     constructor(page: Page) {
+        super();
         this.page = page;
         this.bookCount = page.locator(".basket-count-items.badge");
         this.cartLink = page.locator("#dropdownBasket");
         this.bookWithDiscount = page.locator(".hasDiscount .actionBuyProduct");
-        this.bookWithoutDiscount = page.locator(".note-item:not(.hasDiscount)");
-        this.bookTitle = page.locator(".hasDiscount .product_name");
+        this.bookWithoutDiscount = page.locator(".note-item:not(.hasDiscount) .actionBuyProduct");
+        this.bookTitleWithoutDiscount = page.locator(".note-item:not(.hasDiscount) .product_name")
+        this.bookPriceWithoutDiscount = page.locator(".note-item:not(.hasDiscount) .product_price")
+        this.bookTitleWithDiscount = page.locator(".hasDiscount .product_name")
+        this.bookPriceWithDiscount = page.locator(".hasDiscount .product_price")
         this.bookPrice = page.locator(".hasDiscount .product_price");
     }
 
-    async getBookCount() {
-        await this.bookCount.waitFor({state: "visible"})
-        return await this.bookCount.textContent();
+    async getBookCount(): Promise<string> {
+        return await this.getText(this.bookCount);
     }
 
-    async clickCartMenuItem() {
-        await this.cartLink.click();
+    async clickCartMenu(): Promise<void> {
+        await this.clickElement(this.cartLink);
     }
 
-    async clearCart(page: Page) {
-        await this.cartLink.click();
-        await new CartDropDownMenu(page).clearCart();
+    async addBookWithDiscount(): Promise<void> {
+        await this.clickElement(this.bookWithDiscount.first());
     }
 
-    async addBookWithDiscount() {
-        await this.bookWithDiscount.first().waitFor({state: "visible"});
-        await this.bookWithDiscount.first().click();
+    async addBookWithoutDiscount(): Promise<void> {
+        await this.clickElement(this.bookWithoutDiscount.first());
     }
 
-    async addBookWithoutDiscount() {
-        await this.bookWithoutDiscount.first().waitFor({state: "visible"});
-        await this.bookWithoutDiscount.first().click();
+    async getFirstBookTitleWithoutDiscount(): Promise<string> {
+        return await this.getText(this.bookTitleWithoutDiscount.first());
     }
 
-    async getFirstBookTitle() {
-        return (await this.bookTitle.first().textContent()).trim()
+    async getFirstBookPriceWithoutDiscount(): Promise<string> {
+        return await this.getText(this.bookPriceWithoutDiscount.first());
     }
 
-    async getFirstBookPrice() {
-        return (await this.bookPrice.first().textContent()).trim()
+    async getFirstBookTitleWithDiscount(): Promise<string> {
+        return await this.getText(this.bookTitleWithDiscount.first());
+    }
+
+    async getFirstBookPriceWithDiscount(): Promise<string> {
+        return await this.getText(this.bookPriceWithDiscount.first());
+    }
+
+    async getFirstBookPrice(): Promise<string> {
+        return await this.getText(this.bookPrice.first());
+    }
+
+    async clearCart(): Promise<void> {
+        if (await this.getBookCount() === "9") {
+            await this.addBookWithoutDiscount();
+            await this.addBookWithDiscount();
+            await this.clickCartMenu();
+            await new CartDropDownMenu(this.page).clearCart();
+        }
+
+        if (await this.getBookCount() !== "0") {
+            await this.clickCartMenu();
+            await new CartDropDownMenu(this.page).clearCart();
+        }
     }
 }
 
