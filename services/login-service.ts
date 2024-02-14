@@ -3,7 +3,7 @@ import MainPage from "../pages/main-page";
 import LoginPage from "../pages/login-page";
 
 export abstract class LoginService {
-    public static async loginAs(page: Page, login: string, password: string) {
+    public static async loginAs(page: Page, login: string, password: string): Promise<void> {
         const mainPage = new MainPage(page);
         const loginPage = new LoginPage(page);
 

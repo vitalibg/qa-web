@@ -1,4 +1,4 @@
-import {Locator} from "@playwright/test";
+import {Locator, Page} from "@playwright/test";
 
 class BasePage {
     private WAIT_FIVE_SECOND = 5000;
@@ -24,6 +24,36 @@ class BasePage {
             element.waitForElementState("stable");
             element.waitForElementState("enabled");
         })
+    }
+
+    public customLocator(page: Page, waitInMs: number): (...args: any[]) => Locator {
+        const l = page.locator.bind(page);
+
+        return (locatorArgs) => {
+            const locator = l(locatorArgs);
+
+            locator.click = async (args) => {
+                await new Promise((r) => setTimeout(r, waitInMs));
+                return l(locatorArgs).click(args);
+            };
+
+            locator.fill = async (args) => {
+                await new Promise((r) => setTimeout(r, waitInMs));
+                return l(locatorArgs).fill(args);
+            };
+
+            locator.textContent = async (args) => {
+                await new Promise((r) => setTimeout(r, waitInMs));
+                return l(locatorArgs).textContent(args);
+            }
+
+            locator.clear = async (args) => {
+                await new Promise((r) => setTimeout(r, waitInMs));
+                return l(locatorArgs).clear(args);
+            }
+
+            return locator;
+        };
     }
 }
 

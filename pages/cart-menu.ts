@@ -1,7 +1,8 @@
 import {Locator, Page} from "@playwright/test";
 import BasePage from "./base-page";
+import {WAITING_300_MS} from "../utils/helper";
 
-class CartDropDownMenu extends BasePage {
+class CartMenu extends BasePage {
     private readonly page: Page;
     private readonly clearCartButton: Locator;
     private readonly openCartButton: Locator;
@@ -11,6 +12,7 @@ class CartDropDownMenu extends BasePage {
 
     constructor(page: Page) {
         super();
+        page.locator = this.customLocator(page, WAITING_300_MS);
         this.page = page;
         this.clearCartButton = page.locator(".btn-danger");
         this.openCartButton = page.locator("//a[@href='/basket']");
@@ -23,7 +25,7 @@ class CartDropDownMenu extends BasePage {
         await this.clickElement(this.clearCartButton);
     }
 
-    async openCart(): Promise<void> {
+    async openCartPage(): Promise<void> {
         await this.clickElement(this.openCartButton);
     }
 
@@ -40,4 +42,4 @@ class CartDropDownMenu extends BasePage {
     }
 }
 
-export default CartDropDownMenu
+export default CartMenu
