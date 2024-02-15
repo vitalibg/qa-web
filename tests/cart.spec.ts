@@ -1,9 +1,9 @@
 import {expect, test} from "@playwright/test";
 import HomePage from "../pages/home-page";
 import {LoginService} from "../services/login-service";
-import ENV from "../utils/env"
 import CartMenu from "../pages/cart-menu";
 import {getNumber} from "../utils/helper";
+import User from "../entity/user/user";
 
 test.describe('Пустая корзина', () => {
     const ONE_BOOK = "1";
@@ -12,66 +12,84 @@ test.describe('Пустая корзина', () => {
     let homePage: HomePage;
     let cartMenu: CartMenu;
 
-    test.beforeEach(async ({page}) => {
-        await LoginService.loginAs(page, ENV.USER_LOGIN, ENV.USER_PASSWORD);
-        homePage = new HomePage(page);
-        cartMenu = new CartMenu(page);
-        await homePage.clearCart()
+    test.beforeEach("Предусловие", async ({page}) => {
+        await test.step("Пользователь авторизован в системе", async () => {
+            await LoginService.loginAs(page, new User());
+        })
+
+        await test.step("Корзина пуста", async () => {
+            homePage = new HomePage(page);
+            cartMenu = new CartMenu(page);
+            await homePage.clearCart();
+        })
     })
 
-    test("Переход в пустую корзину", async ({page}) => {
-        await homePage.openCartMenu();
-        await cartMenu.openCartPage()
+    test("Тест-кейс: Переход в пустую корзину", async ({page}) => {
+        await test.step("Кликнуть на иконку корзины", async () => {
+            await homePage.openCartMenu();
+        })
 
-        await expect(page).toHaveURL(/.*basket/);
+        await test.step("В окне корзины нажать кнопку 'Перейти в корзину'", async () => {
+            await cartMenu.openCartPage();
+            await expect.soft(page).toHaveURL(/.*basket/);
+        })
     });
 
-    test("Переход в корзину с 1 неакционным товаром", async ({page}) => {
-        await homePage.addBookWithoutDiscount();
+    test("Тест-кейс: Переход в корзину с 1 неакционным товаром", async ({page}) => {
+        await test.step("Добавить в корзину один товар без скидки", async () => {
+            await homePage.addBookWithoutDiscount();
+            expect.soft(await homePage.getBookCount()).toEqual(ONE_BOOK);
+        })
 
-        expect.soft(await homePage.getBookCount()).toEqual(ONE_BOOK);
+        await test.step("Нажать на иконку корзины", async () => {
+            await homePage.openCartMenu();
+            expect.soft(await homePage.getFirstBookTitleWithoutDiscount()).toEqual(await cartMenu.getBookTitle());
+            expect.soft(await homePage.getFirstBookPriceWithoutDiscount()).toContain(getNumber(await cartMenu.getBookPrice()));
+            expect.soft(await cartMenu.getTotalPrice()).toContain(getNumber(await cartMenu.getBookPrice()));
+        })
 
-        await homePage.openCartMenu()
-
-        expect.soft(await homePage.getFirstBookTitleWithoutDiscount()).toEqual(await cartMenu.getBookTitle());
-        expect.soft(await homePage.getFirstBookPriceWithoutDiscount()).toContain(getNumber(await cartMenu.getBookPrice()));
-        expect.soft(await cartMenu.getTotalPrice()).toContain(getNumber(await cartMenu.getBookPrice()));
-
-        await cartMenu.openCartPage()
-
-        await expect.soft(page).toHaveURL(/.*basket/);
+        await test.step("В окне корзины нажать кнопку 'Перейти в корзину'", async () => {
+            await cartMenu.openCartPage();
+            await expect.soft(page).toHaveURL(/.*basket/);
+        })
     });
 
-    test("Переход в корзину с 1 акционным товаром", async ({page}) => {
-        await homePage.addBookWithDiscount();
+    test("Тест-кейс: Переход в корзину с 1 акционным товаром", async ({page}) => {
+        await test.step("Добавить в корзину один товар со скидкой", async () => {
+            await homePage.addBookWithDiscount();
+            expect.soft(await homePage.getBookCount()).toEqual(ONE_BOOK);
+        })
 
-        expect.soft(await homePage.getBookCount()).toEqual(ONE_BOOK);
+        await test.step("Нажать на иконку корзины", async () => {
+            await homePage.openCartMenu()
+            expect.soft(await homePage.getFirstBookTitleWithDiscount()).toEqual(await cartMenu.getBookTitle());
+            expect.soft(await homePage.getFirstBookPriceWithDiscount()).toContain(getNumber(await cartMenu.getBookPrice()));
+            expect.soft(await cartMenu.getTotalPrice()).toContain(getNumber(await cartMenu.getBookPrice()));
+        })
 
-        await homePage.openCartMenu()
-
-        expect.soft(await homePage.getFirstBookTitleWithDiscount()).toEqual(await cartMenu.getBookTitle());
-        expect.soft(await homePage.getFirstBookPriceWithDiscount()).toContain(getNumber(await cartMenu.getBookPrice()));
-        expect.soft(await cartMenu.getTotalPrice()).toContain(getNumber(await cartMenu.getBookPrice()));
-
-        await cartMenu.openCartPage()
-
-        await expect.soft(page).toHaveURL(/.*basket/);
+        await test.step("В окне корзины нажать кнопку 'Перейти в корзину'", async () => {
+            await cartMenu.openCartPage()
+            await expect.soft(page).toHaveURL(/.*basket/);
+        })
     });
 
-    test("Переход в корзину с 9 акционными товарами одного наименования", async ({page}) => {
-        await homePage.addSpecifiedNumberOfBooksWithSameNames(Number(NINE_BOOKS))
+    test("Тест-кейс: Переход в корзину с 9 акционными товарами одного наименования", async ({page}) => {
+        await test.step("Добавить в корзину 9 товаров одного наименования со скидкой", async () => {
+            await homePage.addSpecifiedNumberOfBooksWithSameNames(Number(NINE_BOOKS))
+            expect.soft(await homePage.getBookCount()).toEqual(NINE_BOOKS);
+        })
 
-        expect.soft(await homePage.getBookCount()).toEqual(NINE_BOOKS);
+        await test.step("Нажать на иконку корзины", async () => {
+            await homePage.openCartMenu();
+            expect.soft(await homePage.getFirstBookTitleWithDiscount()).toEqual(await cartMenu.getBookTitle());
+            expect.soft(await homePage.getFirstBookPriceWithDiscount()).toContain(getNumber(await cartMenu.getBookPrice()));
+            expect.soft(await cartMenu.getTotalPrice()).toEqual(Number(getNumber(await cartMenu.getBookPrice())) * Number(NINE_BOOKS));
+        })
 
-        await homePage.openCartMenu();
-
-        expect.soft(await homePage.getFirstBookTitleWithDiscount()).toEqual(await cartMenu.getBookTitle());
-        expect.soft(await homePage.getFirstBookPriceWithDiscount()).toContain(getNumber(await cartMenu.getBookPrice()));
-        expect.soft(await cartMenu.getTotalPrice()).toEqual(Number(getNumber(await cartMenu.getBookPrice())) * Number(NINE_BOOKS));
-
-        await cartMenu.openCartPage()
-
-        await expect.soft(page).toHaveURL(/.*basket/);
+        await test.step("В окне корзины нажать кнопку 'Перейти в корзину'", async () => {
+            await cartMenu.openCartPage()
+            await expect.soft(page).toHaveURL(/.*basket/);
+        })
     });
 })
 
@@ -82,27 +100,35 @@ test.describe('Не пустая корзина', () => {
     let homePage: HomePage;
     let cartMenu: CartMenu;
 
-    test.beforeEach(async ({page}) => {
-        await LoginService.loginAs(page, ENV.USER_LOGIN, ENV.USER_PASSWORD);
-        homePage = new HomePage(page);
-        cartMenu = new CartMenu(page);
-        await homePage.clearCart();
-        await homePage.addBookWithDiscount();
+    test.beforeEach("Предусловие", async ({page}) => {
+        await test.step("Пользователь авторизован в системе", async () => {
+            await LoginService.loginAs(page, new User());
+        })
+
+        await test.step("В корзине 1 акционный товар", async () => {
+            homePage = new HomePage(page);
+            cartMenu = new CartMenu(page);
+            await homePage.clearCart();
+            await homePage.addBookWithDiscount();
+        })
     })
 
-    test("Переход в корзину с 9 разными товарами", async ({page}) => {
-        await homePage.addSpecifiedNumberOfBooksWithDifferentNames(EIGHT_BOOKS);
+    test("Тест-кейс: Переход в корзину с 9 разными товарами", async ({page}) => {
+        await test.step("Добавить в корзину ещё 8 разных товаров", async () => {
+            await homePage.addSpecifiedNumberOfBooksWithDifferentNames(EIGHT_BOOKS);
+            expect.soft(await homePage.getBookCount()).toEqual(NINE_BOOKS);
+        })
 
-        expect.soft(await homePage.getBookCount()).toEqual(NINE_BOOKS);
+        await test.step("Нажать на иконку корзины", async () => {
+            await homePage.openCartMenu();
+            expect.soft(await homePage.getFirstBookTitleWithDiscount()).toEqual(await cartMenu.getBookTitle());
+            expect.soft(await homePage.getFirstBookPriceWithDiscount()).toContain(getNumber(await cartMenu.getBookPrice()));
+            expect.soft(await cartMenu.getTotalPrice()).toContain(getNumber(await cartMenu.getBookPrice()));
+        })
 
-        await homePage.openCartMenu();
-
-        expect.soft(await homePage.getFirstBookTitleWithDiscount()).toEqual(await cartMenu.getBookTitle());
-        expect.soft(await homePage.getFirstBookPriceWithDiscount()).toContain(getNumber(await cartMenu.getBookPrice()));
-        expect.soft(await cartMenu.getTotalPrice()).toContain(getNumber(await cartMenu.getBookPrice()));
-
-        await cartMenu.openCartPage()
-
-        await expect.soft(page).toHaveURL(/.*basket/);
+        await test.step("В окне корзины нажать кнопку 'Перейти в корзину'", async () => {
+            await cartMenu.openCartPage()
+            await expect.soft(page).toHaveURL(/.*basket/);
+        })
     });
 })
