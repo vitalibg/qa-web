@@ -1,6 +1,6 @@
 import {Locator, Page} from "@playwright/test";
 import BasePage from "./base-page";
-import {WAITING_300_MS} from "../utils/helper";
+import ENV from "../utils/env";
 
 class LoginPage extends BasePage {
     private readonly page: Page;
@@ -10,7 +10,7 @@ class LoginPage extends BasePage {
 
     constructor(page: Page) {
         super();
-        page.locator = this.customLocator(page, WAITING_300_MS);
+        page.locator = this.customLocator(page, Number(ENV.RESPONSE_SPEED));
         this.page = page;
         this.loginInputField = page.locator("#loginform-username");
         this.passwordInputField = page.locator("#loginform-password");

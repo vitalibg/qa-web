@@ -1,6 +1,6 @@
 import {Locator, Page} from "@playwright/test";
 import BasePage from "./base-page";
-import {WAITING_300_MS} from "../utils/helper";
+import ENV from "../utils/env";
 
 class CartMenu extends BasePage {
     private readonly page: Page;
@@ -12,7 +12,7 @@ class CartMenu extends BasePage {
 
     constructor(page: Page) {
         super();
-        page.locator = this.customLocator(page, WAITING_300_MS);
+        page.locator = this.customLocator(page, Number(ENV.RESPONSE_SPEED));
         this.page = page;
         this.clearCartButton = page.locator(".btn-danger");
         this.openCartButton = page.locator("//a[@href='/basket']");
