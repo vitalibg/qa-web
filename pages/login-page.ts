@@ -12,9 +12,9 @@ class LoginPage extends BasePage {
         super();
         page.locator = this.customLocator(page, Number(ENV.RESPONSE_SPEED));
         this.page = page;
-        this.loginInputField = page.locator("#loginform-username");
-        this.passwordInputField = page.locator("#loginform-password");
-        this.enterButton = page.locator("[name='login-button']");
+        this.loginInputField = this.page.locator("#loginform-username");
+        this.passwordInputField = this.page.locator("#loginform-password");
+        this.enterButton = this.page.locator("[name='login-button']");
     }
 
     async loginAs(login: string, password: string): Promise<void> {

@@ -10,7 +10,7 @@ class MainPage extends BasePage {
         super();
         page.locator = this.customLocator(page, Number(ENV.RESPONSE_SPEED));
         this.page = page;
-        this.enterLink = page.getByText("Вход");
+        this.enterLink = this.page.getByText("Вход");
     }
 
     async navigate(): Promise<void> {

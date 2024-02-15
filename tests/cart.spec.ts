@@ -27,6 +27,7 @@ test.describe('Пустая корзина', () => {
     test("Тест-кейс: Переход в пустую корзину", async ({page}) => {
         await test.step("Кликнуть на иконку корзины", async () => {
             await homePage.openCartMenu();
+            expect(await cartMenu.getCartDropDownMenu()).not.toBeFalsy()
         })
 
         await test.step("В окне корзины нажать кнопку 'Перейти в корзину'", async () => {
