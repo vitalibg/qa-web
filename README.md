@@ -23,7 +23,3 @@ npm run cart:prod
 ```
 npm run generate-report
 ```
-
-## Task
-
-### https://github.com/lunin-vadim/qa-web

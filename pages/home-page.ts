@@ -1,5 +1,5 @@
 import {Page} from "playwright-core";
-import CartMenu from "./cart-menu";
+import CartMenu from "./forms/cart-menu";
 import {Locator} from "@playwright/test";
 import BasePage from "./base-page";
 import ENV from "../utils/env";
@@ -8,7 +8,8 @@ class HomePage extends BasePage {
     private readonly page: Page;
     private readonly bookCount: Locator;
     private readonly cartLink: Locator;
-    private readonly book: Locator;
+    private readonly buyBookButton: Locator;
+    private readonly bookTitle: Locator;
     private readonly booksWithDiscount: Locator;
     private readonly booksWithoutDiscount: Locator;
     private readonly bookTitleWithoutDiscount: Locator;
@@ -23,7 +24,8 @@ class HomePage extends BasePage {
         this.page = page;
         this.bookCount = this.page.locator(".basket-count-items.badge");
         this.cartLink = this.page.locator("#dropdownBasket");
-        this.book = this.page.locator(".actionBuyProduct.btn")
+        this.buyBookButton = this.page.locator("//button[@class='actionBuyProduct btn btn-primary mt-3']")
+        this.bookTitle = this.page.locator("//button[@class='actionBuyProduct btn btn-primary mt-3']//preceding-sibling::div[@class='product_name h6 mb-auto']")
         this.booksWithDiscount = this.page.locator(".hasDiscount .actionBuyProduct");
         this.booksWithoutDiscount = this.page.locator(".note-item:not(.hasDiscount) .actionBuyProduct");
         this.bookTitleWithoutDiscount = this.page.locator(".note-item:not(.hasDiscount) .product_name")
@@ -75,12 +77,24 @@ class HomePage extends BasePage {
         }
     }
 
-    async addSpecifiedNumberOfBooksWithDifferentNames(bookQuantity: number): Promise<void> {
-        let books = bookQuantity;
-        for (const el of await this.book.elementHandles()) {
-            books !== 0 ? await el.click() : "";
-            books -= 1;
+    async getBooksWithDifferentNames(bookQuantity: number): Promise<string[]> {
+        const bookTitleList: string[] = [];
+        let clickedBookCount: number = 0;
+        let count: number = 0;
+        const existBook = await this.bookTitle.first().textContent();
+
+        while (clickedBookCount < bookQuantity) {
+            if (existBook !== await this.bookTitle.nth(count).textContent()) {
+                await this.clickElement(this.buyBookButton.nth(count));
+                bookTitleList.push(await this.bookTitle.nth(count).textContent())
+                clickedBookCount++;
+                count++;
+                continue;
+            }
+            count++;
         }
+
+        return bookTitleList;
     }
 
     async clearCart(): Promise<void> {
