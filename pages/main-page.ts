@@ -1,4 +1,4 @@
-import {Locator, Page} from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 import BasePage from "./base-page";
 import ENV from "../utils/env";
 

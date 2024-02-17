@@ -1,4 +1,4 @@
-import {Locator, Page} from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 import BasePage from "./base-page";
 import ENV from "../utils/env";
 
@@ -20,7 +20,7 @@ class LoginPage extends BasePage {
     async loginAs(login: string, password: string): Promise<void> {
         await this.typeValue(this.loginInputField, login);
         await this.typeValue(this.passwordInputField, password);
-        await this.clickElement(this.enterButton)
+        await this.clickElement(this.enterButton);
     }
 }
 

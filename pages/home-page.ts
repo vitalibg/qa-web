@@ -1,6 +1,6 @@
-import {Page} from "playwright-core";
+import { Page } from "playwright-core";
 import CartMenu from "./forms/cart-menu";
-import {Locator} from "@playwright/test";
+import { Locator } from "@playwright/test";
 import BasePage from "./base-page";
 import ENV from "../utils/env";
 
@@ -24,14 +24,14 @@ class HomePage extends BasePage {
         this.page = page;
         this.bookCount = this.page.locator(".basket-count-items.badge");
         this.cartLink = this.page.locator("#dropdownBasket");
-        this.buyBookButton = this.page.locator("//button[@class='actionBuyProduct btn btn-primary mt-3']")
-        this.bookTitle = this.page.locator("//button[@class='actionBuyProduct btn btn-primary mt-3']//preceding-sibling::div[@class='product_name h6 mb-auto']")
+        this.buyBookButton = this.page.locator("//button[@class='actionBuyProduct btn btn-primary mt-3']");
+        this.bookTitle = this.page.locator("//button[@class='actionBuyProduct btn btn-primary mt-3']//preceding-sibling::div[@class='product_name h6 mb-auto']");
         this.booksWithDiscount = this.page.locator(".hasDiscount .actionBuyProduct");
         this.booksWithoutDiscount = this.page.locator(".note-item:not(.hasDiscount) .actionBuyProduct");
-        this.bookTitleWithoutDiscount = this.page.locator(".note-item:not(.hasDiscount) .product_name")
-        this.bookPriceWithoutDiscount = this.page.locator(".note-item:not(.hasDiscount) .product_price")
-        this.bookTitleWithDiscount = this.page.locator(".hasDiscount .product_name")
-        this.bookPriceWithDiscount = this.page.locator(".hasDiscount .product_price")
+        this.bookTitleWithoutDiscount = this.page.locator(".note-item:not(.hasDiscount) .product_name");
+        this.bookPriceWithoutDiscount = this.page.locator(".note-item:not(.hasDiscount) .product_price");
+        this.bookTitleWithDiscount = this.page.locator(".hasDiscount .product_name");
+        this.bookPriceWithDiscount = this.page.locator(".hasDiscount .product_price");
         this.bookPrice = this.page.locator(".hasDiscount .product_price");
     }
 
@@ -67,13 +67,9 @@ class HomePage extends BasePage {
         return await this.getText(this.bookPriceWithDiscount.first());
     }
 
-    async getFirstBookPrice(): Promise<string> {
-        return await this.getText(this.bookPrice.first());
-    }
-
     async addSpecifiedNumberOfBooksWithSameNames(bookCount: number): Promise<void> {
         for (let i = 0; i < bookCount; i++) {
-            await this.addBookWithDiscount()
+            await this.addBookWithDiscount();
         }
     }
 
@@ -86,7 +82,7 @@ class HomePage extends BasePage {
         while (clickedBookCount < bookQuantity) {
             if (existBook !== await this.bookTitle.nth(count).textContent()) {
                 await this.clickElement(this.buyBookButton.nth(count));
-                bookTitleList.push(await this.bookTitle.nth(count).textContent())
+                bookTitleList.push(await this.bookTitle.nth(count).textContent());
                 clickedBookCount++;
                 count++;
                 continue;
@@ -107,4 +103,4 @@ class HomePage extends BasePage {
     }
 }
 
-export default HomePage
+export default HomePage;

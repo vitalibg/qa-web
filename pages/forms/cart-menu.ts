@@ -1,7 +1,7 @@
-import {ElementHandle, Locator, Page} from "@playwright/test";
+import { ElementHandle, Locator, Page } from "@playwright/test";
 import BasePage from "../base-page";
 import ENV from "../../utils/env";
-import {getNumber} from "../../utils/helper";
+import { getNumber } from "../../utils/helper";
 
 class CartMenu extends BasePage {
     public readonly bookTitle: Locator;
@@ -16,7 +16,7 @@ class CartMenu extends BasePage {
         super();
         page.locator = this.customLocator(page, Number(ENV.RESPONSE_SPEED));
         this.page = page;
-        this.cartDropDownMenu = this.page.locator("[aria-labelledby='dropdownBasket']")
+        this.cartDropDownMenu = this.page.locator("[aria-labelledby='dropdownBasket']");
         this.clearCartButton = this.page.locator(".btn-danger");
         this.openCartButton = this.page.locator("//a[@href='/basket']");
         this.bookTitle = this.page.locator("[aria-labelledby='dropdownBasket'] .basket-item-title");
@@ -45,7 +45,7 @@ class CartMenu extends BasePage {
     }
 
     async getBooksPrices(): Promise<string[]> {
-        return await this.bookPrice.allTextContents()
+        return await this.bookPrice.allTextContents();
     }
 
     async getCountedTotalPrice(): Promise<number> {
@@ -62,4 +62,4 @@ class CartMenu extends BasePage {
     }
 }
 
-export default CartMenu
+export default CartMenu;

@@ -1,9 +1,9 @@
-import {IUser} from "./Iuser";
+import { IUser } from "./Iuser";
 import ENV from "../../utils/env";
 
 
 class User implements IUser {
-    login: string = ENV.USER_LOGIN
+    login: string = ENV.USER_LOGIN;
     password: string = ENV.USER_PASSWORD;
 }
 
