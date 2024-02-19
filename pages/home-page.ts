@@ -16,7 +16,6 @@ class HomePage extends BasePage {
     private readonly bookPriceWithoutDiscount: Locator;
     private readonly bookTitleWithDiscount: Locator;
     private readonly bookPriceWithDiscount: Locator;
-    private readonly bookPrice: Locator;
 
     constructor(page: Page) {
         super();
@@ -32,7 +31,6 @@ class HomePage extends BasePage {
         this.bookPriceWithoutDiscount = this.page.locator(".note-item:not(.hasDiscount) .product_price");
         this.bookTitleWithDiscount = this.page.locator(".hasDiscount .product_name");
         this.bookPriceWithDiscount = this.page.locator(".hasDiscount .product_price");
-        this.bookPrice = this.page.locator(".hasDiscount .product_price");
     }
 
     async getBookCount(): Promise<string> {

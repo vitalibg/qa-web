@@ -11,17 +11,18 @@ class CartMenu extends BasePage {
     private readonly goToCartButton: Locator;
     private readonly bookPrice: Locator;
     private readonly totalPrice: Locator;
+    private readonly cartMenuLocator = "[aria-labelledby='dropdownBasket']";
 
     constructor(page: Page) {
         super();
         page.locator = this.customLocator(page, Number(ENV.RESPONSE_SPEED));
         this.page = page;
-        this.cartMenu = this.page.locator("[aria-labelledby='dropdownBasket']");
+        this.cartMenu = this.page.locator(`${this.cartMenuLocator}`);
         this.clearCartButton = this.page.locator(".btn-danger");
         this.goToCartButton = this.page.locator("//a[@href='/basket']");
-        this.bookTitle = this.page.locator("[aria-labelledby='dropdownBasket'] .basket-item-title");
-        this.bookPrice = this.page.locator("[aria-labelledby='dropdownBasket'] .basket-item-price");
-        this.totalPrice = this.page.locator("[aria-labelledby='dropdownBasket'] .basket_price");
+        this.bookTitle = this.page.locator(`${this.cartMenuLocator} .basket-item-title`);
+        this.bookPrice = this.page.locator(`${this.cartMenuLocator} .basket-item-price`);
+        this.totalPrice = this.page.locator(`${this.cartMenuLocator} .basket_price`);
     }
 
     async clearCart(): Promise<void> {
