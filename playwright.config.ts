@@ -1,4 +1,4 @@
-import {defineConfig, devices} from '@playwright/test';
+import { defineConfig, devices } from "@playwright/test";
 
 /**
  * Read environment variables from file.
@@ -10,7 +10,7 @@ import {defineConfig, devices} from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-    testDir: './tests',
+    testDir: "./tests",
     /* Run tests in files in parallel */
     fullyParallel: true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -20,16 +20,16 @@ export default defineConfig({
     /* Opt out of parallel tests on CI. */
     workers: process.env.CI ? 1 : undefined,
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-    reporter: [["allure-playwright"], ["list"]],
+    reporter: [ [ "allure-playwright" ], [ "list" ] ],
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
         /* Base URL to use in actions like `await pages.goto('/')`. */
-        baseURL: 'https://enotes.pointschool.ru',
+        baseURL: "https://enotes.pointschool.ru",
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-        trace: 'retain-on-failure',
-        screenshot: 'only-on-failure',
-        video: 'retain-on-failure',
+        trace: "retain-on-failure",
+        screenshot: "only-on-failure",
+        video: "retain-on-failure",
 
         actionTimeout: 10 * 2000,
         navigationTimeout: 10 * 2000
@@ -38,8 +38,8 @@ export default defineConfig({
     /* Configure projects for major browsers */
     projects: [
         {
-            name: 'chromium',
-            use: {...devices['Desktop Chrome'], headless: false},
+            name: "chromium",
+            use: { ...devices["Desktop Chrome"], headless: false },
         },
 
         // {

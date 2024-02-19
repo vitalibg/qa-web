@@ -35,15 +35,6 @@
     "arrow-spacing": [
       "error"
     ],
-    "array-bracket-spacing": [
-      "error",
-      "always",
-      {
-        "arraysInArrays": false,
-        "objectsInArrays": false,
-        "singleValue": false
-      }
-    ],
     "object-curly-spacing": [
       "error",
       "always"

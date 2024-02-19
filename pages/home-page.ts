@@ -6,12 +6,12 @@ import ENV from "../utils/env";
 
 class HomePage extends BasePage {
     private readonly page: Page;
-    private readonly bookCount: Locator;
-    private readonly cartLink: Locator;
+    private readonly cartCountLabel: Locator;
+    private readonly cartMenu: Locator;
     private readonly buyBookButton: Locator;
     private readonly bookTitle: Locator;
-    private readonly booksWithDiscount: Locator;
-    private readonly booksWithoutDiscount: Locator;
+    private readonly buyBookButtonWithDiscount: Locator;
+    private readonly buyBookButtonWithoutDiscount: Locator;
     private readonly bookTitleWithoutDiscount: Locator;
     private readonly bookPriceWithoutDiscount: Locator;
     private readonly bookTitleWithDiscount: Locator;
@@ -22,12 +22,12 @@ class HomePage extends BasePage {
         super();
         page.locator = this.customLocator(page, Number(ENV.RESPONSE_SPEED));
         this.page = page;
-        this.bookCount = this.page.locator(".basket-count-items.badge");
-        this.cartLink = this.page.locator("#dropdownBasket");
-        this.buyBookButton = this.page.locator("//button[@class='actionBuyProduct btn btn-primary mt-3']");
-        this.bookTitle = this.page.locator("//button[@class='actionBuyProduct btn btn-primary mt-3']//preceding-sibling::div[@class='product_name h6 mb-auto']");
-        this.booksWithDiscount = this.page.locator(".hasDiscount .actionBuyProduct");
-        this.booksWithoutDiscount = this.page.locator(".note-item:not(.hasDiscount) .actionBuyProduct");
+        this.cartCountLabel = this.page.locator(".basket-count-items");
+        this.cartMenu = this.page.locator("#dropdownBasket");
+        this.buyBookButton = this.page.locator(".actionBuyProduct.btn");
+        this.bookTitle = this.page.locator(".product_name.h6");
+        this.buyBookButtonWithDiscount = this.page.locator(".hasDiscount .actionBuyProduct");
+        this.buyBookButtonWithoutDiscount = this.page.locator(".note-item:not(.hasDiscount) .actionBuyProduct");
         this.bookTitleWithoutDiscount = this.page.locator(".note-item:not(.hasDiscount) .product_name");
         this.bookPriceWithoutDiscount = this.page.locator(".note-item:not(.hasDiscount) .product_price");
         this.bookTitleWithDiscount = this.page.locator(".hasDiscount .product_name");
@@ -36,19 +36,19 @@ class HomePage extends BasePage {
     }
 
     async getBookCount(): Promise<string> {
-        return await this.getText(this.bookCount);
+        return await this.getText(this.cartCountLabel);
     }
 
     async openCartMenu(): Promise<void> {
-        await this.clickElement(this.cartLink);
+        await this.clickElement(this.cartMenu);
     }
 
     async addBookWithDiscount(): Promise<void> {
-        await this.clickElement(this.booksWithDiscount.first());
+        await this.clickElement(this.buyBookButtonWithDiscount.first());
     }
 
     async addBookWithoutDiscount(): Promise<void> {
-        await this.clickElement(this.booksWithoutDiscount.first());
+        await this.clickElement(this.buyBookButtonWithoutDiscount.first());
     }
 
     async getFirstBookTitleWithoutDiscount(): Promise<string> {

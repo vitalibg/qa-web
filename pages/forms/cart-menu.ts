@@ -6,9 +6,9 @@ import { getNumber } from "../../utils/helper";
 class CartMenu extends BasePage {
     public readonly bookTitle: Locator;
     private readonly page: Page;
-    private readonly cartDropDownMenu: Locator;
+    private readonly cartMenu: Locator;
     private readonly clearCartButton: Locator;
-    private readonly openCartButton: Locator;
+    private readonly goToCartButton: Locator;
     private readonly bookPrice: Locator;
     private readonly totalPrice: Locator;
 
@@ -16,9 +16,9 @@ class CartMenu extends BasePage {
         super();
         page.locator = this.customLocator(page, Number(ENV.RESPONSE_SPEED));
         this.page = page;
-        this.cartDropDownMenu = this.page.locator("[aria-labelledby='dropdownBasket']");
+        this.cartMenu = this.page.locator("[aria-labelledby='dropdownBasket']");
         this.clearCartButton = this.page.locator(".btn-danger");
-        this.openCartButton = this.page.locator("//a[@href='/basket']");
+        this.goToCartButton = this.page.locator("//a[@href='/basket']");
         this.bookTitle = this.page.locator("[aria-labelledby='dropdownBasket'] .basket-item-title");
         this.bookPrice = this.page.locator("[aria-labelledby='dropdownBasket'] .basket-item-price");
         this.totalPrice = this.page.locator("[aria-labelledby='dropdownBasket'] .basket_price");
@@ -29,7 +29,7 @@ class CartMenu extends BasePage {
     }
 
     async openCartPage(): Promise<void> {
-        await this.clickElement(this.openCartButton);
+        await this.clickElement(this.goToCartButton);
     }
 
     async getBookTitle(): Promise<string> {
@@ -37,11 +37,7 @@ class CartMenu extends BasePage {
     }
 
     async getCartDropDownMenu(): Promise<ElementHandle<SVGElement | HTMLElement>> {
-        return this.cartDropDownMenu.elementHandle();
-    }
-
-    async getBookTitles(): Promise<string[]> {
-        return await this.bookTitle.allTextContents();
+        return this.cartMenu.elementHandle();
     }
 
     async getBooksPrices(): Promise<string[]> {
